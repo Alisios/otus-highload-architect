@@ -1,0 +1,24 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/postgres?currentSchema=social_network
+    username:  postgres
+    password:
+    hikari:
+      schema: social_network
+      maximum-pool-size: 50
+      minimum-idle: 10
+
+  sql:
+    init:
+      schema-locations: classpath:/db/schema.sql
+      mode: never
+
+  flyway:
+    baselineOnMigrate: true
+    validateOnMigrate: false
+
+  jpa:
+    show-sql: true
+    properties.hibernate:
+      format_sql: true
+      generate_statistics: true
