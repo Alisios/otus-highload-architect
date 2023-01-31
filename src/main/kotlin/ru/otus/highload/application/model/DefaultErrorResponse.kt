@@ -1,9 +1,14 @@
 package ru.otus.highload.application.model
 
+import io.swagger.v3.oas.annotations.media.Schema
 import ru.otus.highload.infrastructure.AdditionalLocale
 import java.util.Locale
 
-data class DefaultErrorResponse(val message: String)
+@Schema(name = "Дто ошибки")
+data class DefaultErrorResponse(
+    @Schema(description = "Текст ошибки", example = "Пользователь не найден")
+    val message: String
+)
 
 @Suppress("ClassName")
 class defaultError(val locale: Locale)

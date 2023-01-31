@@ -9,6 +9,7 @@ plugins {
 
     id("org.springframework.boot") version "2.7.3"
     id("io.spring.dependency-management") version "1.0.13.RELEASE"
+    id("org.openapi.generator") version "5.3.0"
 }
 
 group = "ru.otus.highload"
@@ -34,6 +35,11 @@ dependencies {
 
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.postgresql:postgresql")
+    implementation("org.springframework.boot:spring-boot-starter-security")
+    implementation("org.springframework.boot:spring-boot-starter-validation")
+//    implementation("io.springfox:springfox-swagger-ui:2.9.2")
+ //   implementation("org.springdoc:springdoc-openapi-ui:1.6.8")
+  //  implementation("org.springdoc:springdoc-openapi-kotlin:1.6.8")
 }
 
 tasks.test {
