@@ -1,11 +1,3 @@
-#info:
-#  app:
-#    name: social-network
-#    version: 1.0.0
-#server:
-#  servlet:
-#    context-path: /api/v1
-#  forward-headers-strategy: native
 spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/postgres?currentSchema=social_network
@@ -24,14 +16,3 @@ spring:
   flyway:
     baselineOnMigrate: true
     validateOnMigrate: false
-
-#springdoc:
-#  api-docs:
-#    path: /api/docs
-#  packages-to-scan: ru.otus.highload
-#  swagger-ui:
-#    disable-swagger-default-url: false
-#    show-sql: true
-#    properties.hibernate:
-#      format_sql: true
-#      generate_statistics: true

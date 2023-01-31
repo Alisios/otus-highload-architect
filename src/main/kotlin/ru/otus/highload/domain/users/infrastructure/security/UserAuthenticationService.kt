@@ -8,7 +8,7 @@ import ru.otus.highload.domain.commmon.exceptions.IllegalLoginException
 import ru.otus.highload.domain.commmon.exceptions.NotFoundLoginException
 import ru.otus.highload.domain.users.infrastructure.persistence.UserRepository
 
-const val LOGIN_PATTERN = "^[A-Za-z]*\$"
+const val LOGIN_PATTERN = "^[A-Za-z0-9]*\$"
 
 @Service
 class UserAuthenticationService(

@@ -8,6 +8,7 @@ import ru.otus.highload.domain.users.core.model.NewUserDto
 import ru.otus.highload.domain.users.core.model.UserDto
 import ru.otus.highload.domain.users.core.ports.`in`.UserQuery
 import ru.otus.highload.domain.users.core.ports.out.UserPersistencePort
+import java.util.UUID
 
 @Service
 class UserQueryImpl(
@@ -21,13 +22,13 @@ class UserQueryImpl(
         } ?: userPersistencePort.save(newUserDto.copy(password = encoder.encode(newUserDto.password)))
 
 
-    override fun getById(id: String): UserDto {
-        return userPersistencePort.getById(id)
+    override fun getById(id: UUID): UserDto {
+        return userPersistencePort.getById(id.toString())
             ?: throw NotFoundUserException("Пользователь с заданным идентификатором не найден")
     }
 
-    override fun deleteById(id: String) {
-        return userPersistencePort.getById(id)?.let { userPersistencePort.deleteById(id) }
+    override fun deleteById(id: UUID) {
+        return userPersistencePort.getById(id.toString())?.let { userPersistencePort.deleteById(id.toString()) }
             ?: throw NotFoundUserException("Пользователь с заданным идентификатором не найден")
     }
 }

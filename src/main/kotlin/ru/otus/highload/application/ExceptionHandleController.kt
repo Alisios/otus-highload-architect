@@ -7,7 +7,6 @@ import org.springframework.http.ResponseEntity
 import org.springframework.http.converter.HttpMessageNotReadableException
 import org.springframework.validation.FieldError
 import org.springframework.validation.ObjectError
-import org.springframework.web.bind.MethodArgumentNotValidException
 import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.ResponseStatus
@@ -19,7 +18,8 @@ import ru.otus.highload.domain.commmon.exceptions.AuthenticationException
 import ru.otus.highload.domain.commmon.exceptions.ExistedUserException
 import ru.otus.highload.domain.commmon.exceptions.NotFoundUserException
 import java.util.*
-import java.util.function.Consumer
+import java.util.function.*
+import javax.validation.ValidationException
 
 
 @ControllerAdvice
@@ -65,18 +65,13 @@ class ExceptionHandleController {
             .also { logger.error(e) { "Bad request: ${e.message}" } }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(MethodArgumentNotValidException::class)
+    @ExceptionHandler(ValidationException::class)
     fun handleValidationExceptions(
-        ex: MethodArgumentNotValidException
-    ): Map<String, String>? {
-        val errors: MutableMap<String, String> = HashMap()
-        ex.bindingResult.allErrors.forEach(Consumer { error: ObjectError ->
-            val fieldName = (error as FieldError).field
-            val errorMessage = error.getDefaultMessage()
-            if (errorMessage != null) {
-                errors[fieldName] = errorMessage
-            }
-        })
-        return errors
-    }
+        e: ValidationException
+    ): ResponseEntity<DefaultErrorResponse> =
+        ResponseEntity.status(HttpStatus.BAD_REQUEST)
+            .contentType(MediaType.APPLICATION_JSON)
+            .body(e.message?.let { DefaultErrorResponse(it) })
+            .also { logger.error(e) { "Bad request: ${e.message}" } }
+
 }
