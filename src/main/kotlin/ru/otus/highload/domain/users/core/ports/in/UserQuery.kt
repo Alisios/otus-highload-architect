@@ -14,4 +14,6 @@ interface UserQuery {
     fun getById(id: UUID): UserDto
 
     fun deleteById(id: UUID)
+
+    fun getByLogin(login: String): UserDto
 }

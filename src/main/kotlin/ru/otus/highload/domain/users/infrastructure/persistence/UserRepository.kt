@@ -4,7 +4,7 @@ import ru.otus.highload.domain.users.infrastructure.persistence.entity.UserEntit
 
 interface UserRepository {
 
-    fun save(userEntity: UserEntity)
+    fun insert(userEntity: UserEntity)
 
     fun findByIdOrNull(id: String): UserEntity?
 

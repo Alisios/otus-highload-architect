@@ -31,4 +31,9 @@ class UserQueryImpl(
         return userPersistencePort.getById(id.toString())?.let { userPersistencePort.deleteById(id.toString()) }
             ?: throw NotFoundUserException("Пользователь с заданным идентификатором не найден")
     }
+
+    override fun getByLogin(login: String): UserDto {
+        return userPersistencePort.getByLogin(login)
+            ?: throw NotFoundUserException("Пользователь с заданным логиным не найден")
+    }
 }

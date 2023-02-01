@@ -6,7 +6,6 @@ import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
-import org.springframework.security.config.annotation.web.builders.WebSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.config.http.SessionCreationPolicy
 import org.springframework.security.core.userdetails.UserDetailsService
@@ -20,11 +19,6 @@ import org.springframework.security.web.SecurityFilterChain
 class SecurityConfiguration(
     private val userDetailsService: UserDetailsService
 ) {
-
-    fun configure(web: WebSecurity) {
-        web.ignoring().antMatchers("/")
-    }
-
     @Bean
     fun authManager(http: HttpSecurity): AuthenticationManager =
         http.getSharedObject(AuthenticationManagerBuilder::class.java)
@@ -51,9 +45,8 @@ class SecurityConfiguration(
             .httpBasic()
             .and()
             .authorizeRequests()
-           // .antMatchers("/actuator/**", "/api/v1/swagger-ui/**").permitAll()
             .antMatchers("/user/register").permitAll()
-            .antMatchers("/user/get/**").authenticated()
+            .antMatchers("/user/**").fullyAuthenticated()
             .and()
             .formLogin()
             .and()

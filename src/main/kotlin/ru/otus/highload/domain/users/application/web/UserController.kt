@@ -1,11 +1,11 @@
 package ru.otus.highload.domain.users.application.web
 
 
+import io.swagger.v3.oas.annotations.Hidden
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.media.Content
 import io.swagger.v3.oas.annotations.media.Schema
-
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
 import io.swagger.v3.oas.annotations.tags.Tag
@@ -14,15 +14,14 @@ import org.springframework.web.bind.annotation.CrossOrigin
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
-
+import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.bind.annotation.RestController
 import ru.otus.highload.application.model.DefaultErrorResponse
 import ru.otus.highload.domain.users.core.model.NewUserDto
 import ru.otus.highload.domain.users.core.model.UserDto
 import ru.otus.highload.domain.users.core.ports.`in`.UserQuery
-import java.util.UUID
-import javax.validation.Valid
+import java.util.*
 
 @Tag(name = "Получение и создание анкеты пользователя")
 @RestController
@@ -38,18 +37,15 @@ class UserController(private val userQuery: UserQuery) {
             ),
             ApiResponse(responseCode = "401", description = "Unauthorized", content = [Content()]),
             ApiResponse(
-                responseCode = "400",
-                description = "Некорректные данные",
+                responseCode = "400", description = "Некорректные данные",
                 content = [Content(schema = Schema(implementation = DefaultErrorResponse::class))]
             ),
             ApiResponse(
-                responseCode = "404",
-                description = "Пользователь не найден",
+                responseCode = "404", description = "Пользователь не найден",
                 content = [Content(schema = Schema(implementation = DefaultErrorResponse::class))]
             ),
             ApiResponse(
-                responseCode = "500",
-                description = "Внутренняя ошибка",
+                responseCode = "500", description = "Внутренняя ошибка",
                 content = [Content(schema = Schema(implementation = DefaultErrorResponse::class))]
             )
         ]
@@ -70,24 +66,20 @@ class UserController(private val userQuery: UserQuery) {
     @ApiResponses(
         value = [
             ApiResponse(
-                responseCode = "200",
-                description = "Успешное получение анкеты пользователя",
+                responseCode = "200", description = "Успешное получение анкеты пользователя",
                 content = [Content(schema = Schema(implementation = UserDto::class))]
             ),
             ApiResponse(responseCode = "401", description = "Unauthorized", content = [Content()]),
             ApiResponse(
-                responseCode = "400",
-                description = "Некорректные данные",
+                responseCode = "400", description = "Некорректные данные",
                 content = [Content(schema = Schema(implementation = DefaultErrorResponse::class))]
             ),
             ApiResponse(
-                responseCode = "404",
-                description = "Ползователь не найден",
+                responseCode = "404", description = "Ползователь не найден",
                 content = [Content(schema = Schema(implementation = DefaultErrorResponse::class))]
             ),
             ApiResponse(
-                responseCode = "500",
-                description = "Внутренняя ошибка",
+                responseCode = "500", description = "Внутренняя ошибка",
                 content = [Content(schema = Schema(implementation = DefaultErrorResponse::class))]
             )
         ]
@@ -101,4 +93,10 @@ class UserController(private val userQuery: UserQuery) {
         )
         @PathVariable id: UUID
     ): UserDto = userQuery.getById(id)
+
+    @GetMapping("/user")
+    @Hidden
+    fun getUserById(
+        @RequestParam("login") login: String
+    ): UserDto = userQuery.getByLogin(login)
 }

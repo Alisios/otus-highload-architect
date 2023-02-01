@@ -4,7 +4,7 @@ import io.swagger.v3.oas.annotations.media.Schema
 import ru.otus.highload.domain.users.infrastructure.persistence.entity.UserEntity
 import java.util.UUID
 
-@Schema(name = "Дто пользователя")
+@Schema(name = "Информация из анкеты пользователя")
 data class UserDto(
 
     @field:Schema(
@@ -33,13 +33,12 @@ data class UserDto(
 
     @field:Schema(
         description = "Пол",
-        example = "Ж"
+        example = "женский"
     )
     val gender: String,
 
     @field:Schema(
-        description = "Интересы",
-        example = "Гитара"
+        description = "Интересы"
     )
     val interests: MutableSet<String>,
 

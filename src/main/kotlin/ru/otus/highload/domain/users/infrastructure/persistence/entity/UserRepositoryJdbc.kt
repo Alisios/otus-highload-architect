@@ -11,7 +11,6 @@ import java.sql.ResultSet
 import java.sql.Types
 import java.time.LocalDateTime
 
-
 @Service
 class UserRepositoryJdbc(
     private val namedParameterJdbcOperations: NamedParameterJdbcOperations,
@@ -32,7 +31,7 @@ class UserRepositoryJdbc(
         const val PASSWORD = "password"
     }
 
-    override fun save(userEntity: UserEntity) {
+    override fun insert(userEntity: UserEntity) {
         val now = LocalDateTime.now()
         namedParameterJdbcTemplate.jdbcTemplate.update(
             "insert into social_network.users (id, login, password, name, surname, age, gender, city, create_date, modify_date) values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
@@ -48,7 +47,8 @@ class UserRepositoryJdbc(
             now
         )
         val batch: Array<SqlParameterSource> = userEntity.interests.map { interest ->
-            MapSqlParameterSource().addValue(ID, userEntity.id, Types.VARCHAR)
+            MapSqlParameterSource()
+                .addValue(ID, userEntity.id, Types.VARCHAR)
                 .addValue(INTEREST, interest, Types.VARCHAR)
         }.toTypedArray()
         namedParameterJdbcTemplate.batchUpdate(
