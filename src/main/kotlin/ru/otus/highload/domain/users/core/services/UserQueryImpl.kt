@@ -36,8 +36,4 @@ class UserQueryImpl(
         return userPersistencePort.getByLogin(login)
             ?: throw NotFoundUserException("Пользователь с заданным логиным не найден")
     }
-
-    override fun getByFirstNameAndLastName(firstName: String, lastName: String): List<UserDto> {
-        return userPersistencePort.getByFirstNameAndLastName(firstName, lastName)
-    }
 }

@@ -11,6 +11,4 @@ interface UserRepository {
     fun deleteById(id: String)
 
     fun getByLogin(login: String): UserEntity?
-
-    fun getByFirstNameAndLastName(firstName: String, secondName: String): List<UserEntity>
 }

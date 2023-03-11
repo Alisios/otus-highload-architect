@@ -15,6 +15,7 @@ data class NewUserDto(
     @field:Schema(description = "Логин пользователя", example = "star")
     @field:NotBlank(message = "Логин не может быть пустым")
     @field:Size(min = 3, max = 50, message = "Длина логина должна быть от 3 до 50 символов")
+    @field:Pattern(regexp = LOGIN_PATTERN, message = "Логин может состоять из букв английского алфавита и цифр")
     val login: String,
 
     @field:Schema(description = "Пароль", example = "123")

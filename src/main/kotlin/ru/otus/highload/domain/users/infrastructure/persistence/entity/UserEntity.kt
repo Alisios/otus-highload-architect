@@ -10,7 +10,7 @@ data class UserEntity(
     val surname: String,
     val age: Int,
     val gender: String,
-    val interests: MutableSet<String> = mutableSetOf(),
+    val interests: MutableSet<String>,
 
     val city: String?,
     var createDate: LocalDateTime? = null,

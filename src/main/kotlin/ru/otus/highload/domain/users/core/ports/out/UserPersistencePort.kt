@@ -12,6 +12,4 @@ interface UserPersistencePort {
     fun deleteById(id: String)
 
     fun getByLogin(login: String): UserDto?
-
-    fun getByFirstNameAndLastName(firstName: String, secondName: String): List<UserDto>
 }
