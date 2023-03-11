@@ -7,8 +7,8 @@ import org.springframework.boot.runApplication
 
 @SpringBootApplication
 @ConfigurationPropertiesScan
-class SocialNetworkDemoApplication
+class SocialNetworkDemoApplicationKt
 
  fun main(args: Array<String>) {
-    runApplication<SocialNetworkDemoApplication>(*args)
+    runApplication<SocialNetworkDemoApplicationKt>(*args)
 }

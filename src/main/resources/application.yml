@@ -1,8 +1,8 @@
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/postgres?currentSchema=social_network
-    username: postgres
-    password:
+    url: jdbc:postgresql://localhost:5432/social-network?currentSchema=social_network
+    username: alisa
+    password: password1
     hikari:
       schema: social_network
       maximum-pool-size: 50
