@@ -1,16 +1,22 @@
 package ru.otus.highload.domain.users.infrastructure.persistence.entity
 
 import org.springframework.jdbc.core.RowMapper
-import org.springframework.jdbc.core.namedparam.MapSqlParameterSource
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
-import org.springframework.jdbc.core.namedparam.SqlParameterSource
 import org.springframework.stereotype.Service
 import ru.otus.highload.domain.users.infrastructure.persistence.UserRepository
 import java.sql.ResultSet
-import java.sql.Types
 import java.time.LocalDateTime
+import java.util.*
+import java.util.Map
+import kotlin.collections.List
+import kotlin.collections.isNotEmpty
+import kotlin.collections.mapOf
+import kotlin.collections.toMutableSet
+import kotlin.collections.toTypedArray
 
+
+@Suppress("UNCHECKED_CAST")
 @Service
 class UserRepositoryJdbc(
     private val namedParameterJdbcOperations: NamedParameterJdbcOperations,
@@ -26,7 +32,7 @@ class UserRepositoryJdbc(
         const val GENDER = "gender"
         const val CREATED = "create_date"
         const val MODIFIED = "modify_date"
-        const val INTEREST = "interest"
+        const val INTEREST = "interests"
         const val LOGIN = "login"
         const val PASSWORD = "password"
     }
@@ -34,7 +40,7 @@ class UserRepositoryJdbc(
     override fun insert(userEntity: UserEntity) {
         val now = LocalDateTime.now()
         namedParameterJdbcTemplate.jdbcTemplate.update(
-            "insert into social_network.users (id, login, password, name, surname, age, gender, city, create_date, modify_date) values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+            "insert into social_network.users (id, login, password, name, surname, age, gender, city, create_date, modify_date, interests) values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
             userEntity.id,
             userEntity.login,
             userEntity.password,
@@ -44,19 +50,8 @@ class UserRepositoryJdbc(
             userEntity.gender,
             userEntity.city,
             now,
-            now
-        )
-        val batch: Array<SqlParameterSource> = userEntity.interests.map { interest ->
-            MapSqlParameterSource()
-                .addValue(ID, userEntity.id, Types.VARCHAR)
-                .addValue(INTEREST, interest, Types.VARCHAR)
-        }.toTypedArray()
-        namedParameterJdbcTemplate.batchUpdate(
-            // language=sql
-            """
-            insert into social_network.interests (id, interest) values (:id, :interest)
-           """.trimIndent(),
-            batch
+            now,
+            userEntity.interests.toTypedArray()
         )
     }
 
@@ -67,23 +62,10 @@ class UserRepositoryJdbc(
                 mapOf(ID to id),
                 userRowMapper
             )
-        val interests =
-            namedParameterJdbcTemplate.jdbcTemplate.queryForList(
-                "select interest from social_network.interests where id = ?",
-                String::class.java,
-                id
-            )
-        return users.takeIf { it.isNotEmpty() }?.let {
-            it[0].interests.addAll(interests)
-            it[0]
-        }
+        return users.takeIf { it.isNotEmpty() }?.get(0)
     }
 
     override fun deleteById(id: String) {
-        namedParameterJdbcOperations.update(
-            "delete from social_network.interests where id = :id",
-            mapOf("id" to id)
-        )
         namedParameterJdbcOperations.update("delete from social_network.users where id = :id", mapOf(ID to id))
     }
 
@@ -95,31 +77,41 @@ class UserRepositoryJdbc(
                 userRowMapper
             )
 
-        return user.takeIf { it.isNotEmpty() }?.let {
-            val interests =
-                namedParameterJdbcTemplate.jdbcTemplate.queryForList(
-                    "select interest from social_network.interests where id = ?",
-                    String::class.java,
-                    it[0].id
-                )
-            it[0].interests.addAll(interests)
-            it[0]
-        }
+        return user.takeIf { it.isNotEmpty() }?.get(0)
+    }
+
+    override fun getByFirstNameAndLastName(firstName: String, secondName: String): List<UserEntity> {
+        val users: List<UserEntity> = namedParameterJdbcOperations.query(
+            // language=sql
+            """
+                    select * from social_network.users where name LIKE :name and surname LIKE :surname ORDER BY id
+                   """,
+            Map.of(
+                NAME,
+                "$firstName%",
+                SURNAME,
+                "$secondName%",
+            ),
+            userRowMapper
+        )
+        return users
+
     }
 
     private val userRowMapper = RowMapper { resultSet: ResultSet, i: Int ->
         UserEntity(
-            resultSet.getString(ID),
-            resultSet.getString(LOGIN),
-            resultSet.getString(PASSWORD),
-            resultSet.getString(NAME),
-            resultSet.getString(SURNAME),
-            resultSet.getInt(AGE),
-            resultSet.getString(GENDER),
-            mutableSetOf(),
-            resultSet.getString(CITY),
-            resultSet.getTimestamp(CREATED).toLocalDateTime(),
-            resultSet.getTimestamp(MODIFIED).toLocalDateTime(),
+            id = resultSet.getString(ID),
+            login = resultSet.getString(LOGIN),
+            password = resultSet.getString(PASSWORD),
+            name = resultSet.getString(NAME),
+            surname = resultSet.getString(SURNAME),
+            age = resultSet.getInt(AGE),
+            gender = resultSet.getString(GENDER),
+            city = resultSet.getString(CITY),
+            interests = (resultSet.getArray(INTEREST).array as Array<String>).toMutableSet(),
+            createDate = resultSet.getTimestamp(CREATED).toLocalDateTime(),
+            modifyDate = resultSet.getTimestamp(MODIFIED).toLocalDateTime(),
         )
     }
 }
+
