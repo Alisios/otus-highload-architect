@@ -29,8 +29,4 @@ class UserPersistenceAdapter(
     @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
     override fun getByLogin(login: String) =
         userRepository.getByLogin(login)?.toDto()
-
-    override fun getByFirstNameAndLastName(firstName: String, secondName: String): List<UserDto> =
-        userRepository.getByFirstNameAndLastName(firstName, secondName).map { it.toDto() }
-
 }

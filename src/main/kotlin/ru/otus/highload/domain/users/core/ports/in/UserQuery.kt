@@ -16,6 +16,4 @@ interface UserQuery {
     fun deleteById(id: UUID)
 
     fun getByLogin(login: String): UserDto
-
-    fun getByFirstNameAndLastName(firstName: String, lastName: String): List<UserDto>
 }

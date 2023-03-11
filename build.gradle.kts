@@ -11,15 +11,10 @@ plugins {
     id("io.spring.dependency-management") version "1.0.13.RELEASE"
     id("org.openapi.generator") version "5.3.0"
 }
-tasks.withType<KotlinCompile> {
-    kotlinOptions {
-        freeCompilerArgs = listOf("-Xjsr305=strict")
-        jvmTarget = "17"
-    }
-}
 
 group = "ru.otus.highload"
-version = "1.0.0"
+version = "1.0-SNAPSHOT"
+java.sourceCompatibility = JavaVersion.VERSION_11
 
 allprojects {
     repositories {
@@ -49,6 +44,14 @@ dependencies {
 
 tasks.test {
     useJUnitPlatform()
+}
+
+tasks.withType<KotlinCompile> {
+    kotlinOptions.jvmTarget = "11"
+}
+
+application {
+    mainClass.set("SocialNetworkDemoApplication")
 }
 
 springBoot {

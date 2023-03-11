@@ -23,7 +23,6 @@ import ru.otus.highload.domain.users.core.model.UserDto
 import ru.otus.highload.domain.users.core.ports.`in`.UserQuery
 import java.util.*
 
-
 @Tag(name = "Получение и создание анкеты пользователя")
 @RestController
 @CrossOrigin
@@ -100,38 +99,4 @@ class UserController(private val userQuery: UserQuery) {
     fun getUserById(
         @RequestParam("login") login: String
     ): UserDto = userQuery.getByLogin(login)
-
-    @Operation(summary = "Поиск анкет")
-    @ApiResponses(
-        value = [
-            ApiResponse(
-                responseCode = "200", description = "Успешный поиск пользователя",
-                content = [Content(schema = Schema(implementation = UserDto::class))]
-            ),
-            ApiResponse(responseCode = "401", description = "Unauthorized", content = [Content()]),
-            ApiResponse(
-                responseCode = "400", description = "Некорректные данные",
-                content = [Content(schema = Schema(implementation = DefaultErrorResponse::class))]
-            ),
-            ApiResponse(
-                responseCode = "500", description = "Внутренняя ошибка",
-                content = [Content(schema = Schema(implementation = DefaultErrorResponse::class))]
-            )
-        ]
-    )
-    @GetMapping("/user/search")
-    fun getUserNameAndSurname(
-        @Parameter(
-            description = "Имя пользователя или его часть",
-            required = true,
-            example = "Саша"
-        )
-        @RequestParam("first_name") firstName: String,
-        @Parameter(
-            description = "Фамилия пользователя или его часть",
-            required = true,
-            example = "Лобанов"
-        )
-        @RequestParam("last_name") lastName: String
-    ): List<UserDto> = userQuery.getByFirstNameAndLastName(firstName, lastName)
 }
