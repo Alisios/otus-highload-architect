@@ -6,7 +6,7 @@ import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.stereotype.Service
 import ru.otus.highload.domain.commmon.exceptions.IllegalLoginException
 import ru.otus.highload.domain.commmon.exceptions.NotFoundLoginException
-import ru.otus.highload.domain.users.infrastructure.persistence.UserRepository
+import ru.otus.highload.domain.users.infrastructure.persistence.user.UserRepository
 
 const val LOGIN_PATTERN = "^[A-Za-z0-9]*\$"
 
@@ -19,7 +19,8 @@ class UserAuthenticationService(
         login.validateLogin()
         return login?.let { l ->
             userRepository.getByLogin(l)?.let {
-                User.withUsername(it.login)
+                //User.withUsername(it.login)
+                User.withUsername(it.id)
                     .password(it.password)
                     .authorities("USER")
                     .accountExpired(false)

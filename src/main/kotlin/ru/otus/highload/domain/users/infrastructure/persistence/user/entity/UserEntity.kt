@@ -1,4 +1,4 @@
-package ru.otus.highload.domain.users.infrastructure.persistence.entity
+package ru.otus.highload.domain.users.infrastructure.persistence.user.entity
 
 import java.time.LocalDateTime
 

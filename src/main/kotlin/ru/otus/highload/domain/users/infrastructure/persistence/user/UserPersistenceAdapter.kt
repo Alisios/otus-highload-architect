@@ -1,4 +1,4 @@
-package ru.otus.highload.domain.users.infrastructure.persistence
+package ru.otus.highload.domain.users.infrastructure.persistence.user
 
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Propagation
@@ -12,7 +12,7 @@ import ru.otus.highload.domain.users.core.ports.out.UserPersistencePort
 @Service
 @Transactional
 class UserPersistenceAdapter(
-    private val userRepository: UserRepository,
+    private val userRepository: UserRepository
 ) : UserPersistencePort {
 
     override fun save(user: NewUserDto): String {

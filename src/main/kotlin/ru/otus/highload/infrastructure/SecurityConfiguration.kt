@@ -46,7 +46,7 @@ class SecurityConfiguration(
             .and()
             .authorizeRequests()
             .antMatchers("/user/register").permitAll()
-            .antMatchers("/user/**").fullyAuthenticated()
+            .antMatchers("/user/**", "/post/**", "/friend/**").fullyAuthenticated()
             .and()
             .formLogin()
             .and()

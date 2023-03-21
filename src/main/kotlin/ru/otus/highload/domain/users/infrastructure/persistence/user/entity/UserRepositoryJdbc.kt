@@ -1,10 +1,10 @@
-package ru.otus.highload.domain.users.infrastructure.persistence.entity
+package ru.otus.highload.domain.users.infrastructure.persistence.user.entity
 
 import org.springframework.jdbc.core.RowMapper
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import org.springframework.stereotype.Service
-import ru.otus.highload.domain.users.infrastructure.persistence.UserRepository
+import ru.otus.highload.domain.users.infrastructure.persistence.user.UserRepository
 import java.sql.ResultSet
 import java.time.LocalDateTime
 import java.util.*

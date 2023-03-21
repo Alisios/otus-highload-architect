@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.ResponseStatus
 import ru.otus.highload.application.model.DefaultErrorResponse
 import ru.otus.highload.domain.commmon.exceptions.AuthenticationException
+import ru.otus.highload.domain.commmon.exceptions.CommentNotFoundException
 import ru.otus.highload.domain.commmon.exceptions.ExistedUserException
 import ru.otus.highload.domain.commmon.exceptions.NotFoundUserException
 import java.util.*
@@ -22,7 +23,7 @@ class ExceptionHandleController {
 
     private companion object : KLogging() {
         const val DEFAULT_ERROR_MESSAGE_RU = "Что-то пошло не так. Попробуйте позже"
-        const val NOT_FOUND_ERROR_MESSAGE_RU = "Пользователь  не найден"
+        const val NOT_FOUND_ERROR_MESSAGE_RU = "Информация не найдена"
     }
 
     @ExceptionHandler(Exception::class)
@@ -32,7 +33,7 @@ class ExceptionHandleController {
             .body(DefaultErrorResponse(DEFAULT_ERROR_MESSAGE_RU))
             .also { logger.error(e) { "Server error: ${e.message}" } }
 
-    @ExceptionHandler(NotFoundUserException::class)
+    @ExceptionHandler(NotFoundUserException::class, CommentNotFoundException::class)
     fun notFoundExceptionHandler(e: Exception): ResponseEntity<DefaultErrorResponse> =
         ResponseEntity.status(HttpStatus.NOT_FOUND)
             .contentType(MediaType.APPLICATION_JSON)

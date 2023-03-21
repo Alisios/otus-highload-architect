@@ -1,12 +1,10 @@
 package ru.otus.highload.domain.users.core.model
 
 import io.swagger.v3.oas.annotations.media.Schema
-import ru.otus.highload.domain.users.infrastructure.persistence.entity.UserEntity
-import ru.otus.highload.domain.users.infrastructure.security.LOGIN_PATTERN
+import ru.otus.highload.domain.users.infrastructure.persistence.user.entity.UserEntity
 import java.util.*
 import javax.validation.constraints.NotBlank
 import javax.validation.constraints.NotNull
-import javax.validation.constraints.Pattern
 import javax.validation.constraints.Size
 
 @Schema(name = "Новый пользователь")

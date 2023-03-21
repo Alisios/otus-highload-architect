@@ -55,7 +55,7 @@ class UserController(private val userQuery: UserQuery) {
     @PostMapping("/user/register")
     fun register(
         @io.swagger.v3.oas.annotations.parameters.RequestBody(
-            description = "Гыук",
+            description = "User",
             required = true,
             content = [Content(schema = Schema(implementation = NewUserDto::class))]
         )

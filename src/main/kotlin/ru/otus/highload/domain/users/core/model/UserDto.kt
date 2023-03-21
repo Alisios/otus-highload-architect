@@ -1,7 +1,7 @@
 package ru.otus.highload.domain.users.core.model
 
 import io.swagger.v3.oas.annotations.media.Schema
-import ru.otus.highload.domain.users.infrastructure.persistence.entity.UserEntity
+import ru.otus.highload.domain.users.infrastructure.persistence.user.entity.UserEntity
 import java.util.UUID
 
 @Schema(name = "Информация из анкеты пользователя")

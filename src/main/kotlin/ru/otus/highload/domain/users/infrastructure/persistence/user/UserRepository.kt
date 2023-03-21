@@ -1,6 +1,6 @@
-package ru.otus.highload.domain.users.infrastructure.persistence
+package ru.otus.highload.domain.users.infrastructure.persistence.user
 
-import ru.otus.highload.domain.users.infrastructure.persistence.entity.UserEntity
+import ru.otus.highload.domain.users.infrastructure.persistence.user.entity.UserEntity
 
 interface UserRepository {
 
