@@ -1,8 +1,8 @@
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/social-network?currentSchema=social_network
-    username: alisa
-    password: password1
+    url: jdbc:postgresql://localhost:5432/postgres?currentSchema=social_network
+    username: postgres
+    password:
     hikari:
       schema: social_network
       maximum-pool-size: 50
@@ -16,3 +16,34 @@ spring:
   flyway:
     baselineOnMigrate: true
     validateOnMigrate: false
+
+  redis:
+    host: localhost
+
+  data:
+    redis:
+      repositories:
+        enabled: true
+
+  main:
+    allow-bean-definition-overriding: true
+
+app:
+  cache:
+    redis:
+      postsMaxNumberPerUser: 1000
+  redis:
+    posts:
+      prefix: social-network
+  posts:
+    executor:
+      core-pool-size: 10
+      max-pool-size: 20
+      keep-alive-seconds: 5
+      await-termination-time-seconds: 10
+  users:
+    executor:
+      core-pool-size: 10
+      max-pool-size: 20
+      keep-alive-seconds: 5
+      await-termination-time-seconds: 10
