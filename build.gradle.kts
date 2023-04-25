@@ -35,6 +35,8 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.flywaydb:flyway-core")
     implementation("org.springframework.boot:spring-boot-starter-data-redis")
+    implementation("org.springframework.boot:spring-boot-starter-websocket")
+    implementation("org.springframework.integration:spring-integration-stomp:6.0.5")
 
     //Logging
     implementation("io.github.microutils:kotlin-logging-jvm:2.1.23")
