@@ -19,7 +19,7 @@ tasks.withType<KotlinCompile> {
 }
 
 group = "ru.otus.highload"
-version = "2.1.0"
+version = "3.0.0"
 
 allprojects {
     repositories {
@@ -34,6 +34,8 @@ dependencies {
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.flywaydb:flyway-core")
+    implementation("org.springframework.boot:spring-boot-starter-data-redis")
+
     //Logging
     implementation("io.github.microutils:kotlin-logging-jvm:2.1.23")
     runtimeOnly("net.logstash.logback:logstash-logback-encoder:7.2")

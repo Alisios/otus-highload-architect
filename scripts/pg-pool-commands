@@ -1,0 +1,15 @@
+#to pool
+docker exec -ti otus-highload-architect2_pgpool_1 /bin/bash
+
+PGPASSWORD=adminpassword psql -U postgres -h localhost -p 5432 -d postgres -c "show pool_nodes"
+
+PGPASSWORD=adminpassword psql -U postgres -h localhost -p 5432 -d postgres -c "show pool_backend_stats"
+
+PGPASSWORD=adminpassword psql -U postgres -h localhost -p 5432 -d postgres -c "SELECT pid,usename,application_name,state,sync_state FROM
+pg_stat_replication"
+
+#to nodes
+docker exec -ti otus-highload-architect2_pg-2_1 /bin/bash
+docker exec -ti otus-highload-architect2_pg-1_1 /bin/bash
+docker exec -ti otus-highload-architect2_pg-0_1 /bin/bash
+PGPASSWORD=adminpassword psql -U postgres -h localhost -p 5432 -d customdatabase -c "SELECT count (*) FROM social_network.users"

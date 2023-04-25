@@ -1,12 +1,10 @@
-version: '2'
+version: '4'
+networks:
+  my-network:
+    driver: bridge
 
 volumes:
-  pg_0_data:
-    driver: local
-  pg_1_data:
-      driver: local
-  pg_2_data:
-    driver: local
+  postgres-data:
 
 services:
   app:
@@ -20,34 +18,26 @@ services:
       - 18080
     environment:
       TZ: 'Europe/Moscow'
-      SPRING_DATASOURCE_URL: jdbc:postgresql://pgpool:5432/customdatabase?currentSchema=social_network
-      SPRING_DATASOURCE_USERNAME: postgres
-      SPRING_DATASOURCE_PASSWORD: adminpassword
-
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/social-network?currentSchema=social_network
+      SPRING_DATASOURCE_USERNAME: alisa
+      SPRING_DATASOURCE_PASSWORD: password1
+      SPRING_REDIS_HOST: redis
+      REDIS_HOST: redis
     restart: unless-stopped
     depends_on:
-      pgpool:
+      db:
+        condition: service_healthy
+      redis:
         condition: service_healthy
 
-  pg-0:
-    image: bitnami/postgresql-repmgr:14
-    ports:
-      - 5432
-    volumes:
-      - pg_0_data:/bitnami/postgresql
+  db:
+    container_name: db
+    image: postgres:12
     environment:
-#      - POSTGRESQL_SYNCHRONOUS_COMMIT_MODE=on
-#      - POSTGRESQL_NUM_SYNCHRONOUS_REPLICAS=2
-      - POSTGRESQL_REPLICATION_MODE=master
-      - POSTGRESQL_POSTGRES_PASSWORD=adminpassword
-      - POSTGRESQL_USERNAME=customuser
-      - POSTGRESQL_PASSWORD=custompassword
-      - POSTGRESQL_DATABASE=customdatabase
-      - REPMGR_PASSWORD=repmgrpassword
-      - REPMGR_PRIMARY_HOST=pg-0
-      - REPMGR_PARTNER_NODES=pg-0,pg-1,pg-2
-      - REPMGR_NODE_NAME=pg-0
-      - REPMGR_NODE_NETWORK_NAME=pg-0
+      TZ: 'Europe/Moscow'
+      POSTGRES_USER: alisa
+      POSTGRES_PASSWORD: password1
+      POSTGRES_DB: social-network
     healthcheck:
       test: [ "CMD-SHELL", "pg_isready -U postgres -d customdatabase" ]
       interval: 10s
@@ -55,95 +45,24 @@ services:
       retries: 5
       start_period: 10s
 
-  pg-1:
-    image: bitnami/postgresql-repmgr:14
-    ports:
-      - 5432
     volumes:
-      - pg_1_data:/bitnami/postgresql
-    environment:
-#      - POSTGRESQL_REPLICATION_MODE=slave
-      - POSTGRESQL_POSTGRES_PASSWORD=adminpassword
-      - POSTGRESQL_USERNAME=customuser
-      - POSTGRESQL_PASSWORD=custompassword
-      - POSTGRESQL_DATABASE=customdatabase
-      - REPMGR_PASSWORD=repmgrpassword
-      - REPMGR_PRIMARY_HOST=pg-0
-      - REPMGR_PARTNER_NODES=pg-0,pg-1,pg-2
-      - REPMGR_NODE_NAME=pg-1
-      - REPMGR_NODE_NETWORK_NAME=pg-1
-    healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U postgres -d customdatabase" ]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-      start_period: 10s
-
-  pg-2:
-    image: bitnami/postgresql-repmgr:14
-    ports:
-      - 5432
-    volumes:
-      - pg_2_data:/bitnami/postgresql
-    environment:
-#      - POSTGRESQL_REPLICATION_MODE=slave
-      - POSTGRESQL_POSTGRES_PASSWORD=adminpassword
-      - POSTGRESQL_USERNAME=customuser
-      - POSTGRESQL_PASSWORD=custompassword
-      - POSTGRESQL_DATABASE=customdatabase
-      - REPMGR_PASSWORD=repmgrpassword
-      - REPMGR_PRIMARY_HOST=pg-0
-      - REPMGR_PARTNER_NODES=pg-0,pg-1,pg-2
-      - REPMGR_NODE_NAME=pg-2
-      - REPMGR_NODE_NETWORK_NAME=pg-2
-    healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U postgres -d customdatabase" ]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-      start_period: 10s
-
-  pgpool:
-    image: bitnami/pgpool:latest
+      - postgres-data:/var/lib/postgresql/data
     ports:
       - 5432:5432
-    environment:
-      - PGPOOL_BACKEND_NODES=0:pg-0:5432:0:pg-0:ALLOW_TO_FAILOVER,1:pg-1:5432:1:pg-1:ALLOW_TO_FAILOVER,2:pg-2:5432:1:pg-2:ALLOW_TO_FAILOVER
-      - PGPOOL_SR_CHECK_USER=customuser
-      - PGPOOL_SR_CHECK_PASSWORD=custompassword
-      - PGPOOL_ENABLE_LDAP=no
-      - PGPOOL_POSTGRES_USERNAME=postgres
-      - PGPOOL_POSTGRES_PASSWORD=adminpassword
-      - PGPOOL_ADMIN_USERNAME=admin
-      - PGPOOL_ADMIN_PASSWORD=adminpassword
-#      - PGPOOL_CLIENT_MIN_MESSAGES=debug1
-      - PGPOOL_MAX_POOL=32
-      - PGPOOL_NUM_INIT_CHILDREN=64
-    depends_on:
-      pg-0:
-        condition: service_healthy
-      pg-1:
-        condition: service_healthy
-      pg-2:
-        condition: service_healthy
+    expose:
+      - 5432
+    restart: unless-stopped
+
+
+  redis:
+    container_name: redis-cache
+    image: redis:7
+    ports:
+      - "6379:6379"
+    #    volumes:
+    #      - ./redis/data:/data
     healthcheck:
-      test: [ "CMD", "/opt/bitnami/scripts/pgpool/healthcheck.sh" ]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-#  db:
-#    container_name: db
-#    image: artifactory.raiffeisen.ru/ext-devimage-docker/postgres:12-alpine
-#    environment:
-#      TZ: 'Europe/Moscow'
-#      POSTGRES_USER: alisa
-#      POSTGRES_PASSWORD: password1
-#      POSTGRES_DB: social-network
-#
-#    volumes:
-#      - postgres-data:/var/lib/postgresql/data
-#    ports:
-#      - 5432:5432
-#    expose:
-#      - 5432
-#    restart: unless-stopped
+      test: [ "CMD", "redis-cli", "ping" ]
+      interval: 5s
+      timeout: 30s
+      retries: 50
