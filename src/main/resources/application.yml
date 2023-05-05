@@ -1,4 +1,9 @@
 spring:
+  rabbitmq:
+    host: localhost
+    username: guest
+    password: guest
+
   datasource:
     url: jdbc:postgresql://localhost:5432/postgres?currentSchema=social_network
     username: postgres

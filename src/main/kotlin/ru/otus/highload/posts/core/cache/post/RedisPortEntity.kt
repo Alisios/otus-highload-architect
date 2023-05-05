@@ -1,4 +1,4 @@
-package ru.otus.highload.posts.core.cache
+package ru.otus.highload.posts.core.cache.post
 
 import org.springframework.data.annotation.Id
 import org.springframework.data.redis.core.RedisHash
