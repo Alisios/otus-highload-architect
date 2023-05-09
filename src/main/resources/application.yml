@@ -1,4 +1,9 @@
 spring:
+  rabbitmq:
+    host: localhost
+    username: guest
+    password: guest
+
   datasource:
     url: jdbc:postgresql://localhost:5432/postgres?currentSchema=social_network
     username: postgres
@@ -35,6 +40,19 @@ app:
   redis:
     posts:
       prefix: social-network
+  rabbit:
+    mq:
+      login: guest
+      password: guest
+      systemLogin: guest
+      systemPassword: guest
+      host: 127.0.0.1
+      port: 61613
+  websocket:
+    topic-prefix: /topic
+    queue-prefix: /queue
+    ws-endpoint: /ws-endpoint
+    application-destination-prefix: /app
   posts:
     executor:
       core-pool-size: 10

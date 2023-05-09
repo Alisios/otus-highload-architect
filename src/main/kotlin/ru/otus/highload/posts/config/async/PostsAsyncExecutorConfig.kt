@@ -1,4 +1,4 @@
-package ru.otus.highload.posts.config
+package ru.otus.highload.posts.config.async
 
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration

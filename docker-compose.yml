@@ -1,10 +1,10 @@
-version: '4'
+#version: '4'
 networks:
   my-network:
     driver: bridge
 
 volumes:
-#  postgres-data:
+  postgres-data:
   healthcheck-volume:
 
 services:
@@ -14,9 +14,7 @@ services:
       dockerfile: Dockerfile
     privileged: true
     ports:
-      - 18080:8080
-    expose:
-      - 18080
+      - "18080-18095:8080"
     environment:
       TZ: 'Europe/Moscow'
       SPRING_DATASOURCE_URL: jdbc:postgresql://pg-master:5432/social-network?currentSchema=social_network
@@ -24,7 +22,8 @@ services:
       SPRING_DATASOURCE_PASSWORD: password1
       SPRING_REDIS_HOST: redis
       REDIS_HOST: redis
-    restart: unless-stopped
+      APP_RABBIT_MQ_HOST: rabbitmq
+    restart: always
     depends_on:
       pg-master:
         condition: service_healthy
@@ -51,6 +50,8 @@ services:
       timeout: 5s
       retries: 5
       start_period: 10s
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
 
   pg-worker:
     image: "citusdata/citus:11.2.0"
@@ -86,10 +87,28 @@ services:
     image: redis:7
     ports:
       - "6379:6379"
-    #    volumes:
-    #      - ./redis/data:/data
+    volumes:
+      - ./redis/data:/data
     healthcheck:
       test: [ "CMD", "redis-cli", "ping" ]
       interval: 5s
       timeout: 30s
       retries: 50
+
+  rabbitmq:
+    image: rabbitmq:latest
+    container_name: rabbit-mq
+    environment:
+      POSTGRES_USER: "alisa"
+    ports:
+      - 61613:61613
+      - 5672:5672
+      - 15672:15672
+    volumes:
+      - ./rabbit_enable_plugins:/etc/rabbitmq/enabled_plugins
+      - ./rabbitmq/data:/var/lib/rabbitmq
+    healthcheck:
+      test: [ "CMD-SHELL", "rabbitmqctl status" ]
+      interval: 5s
+      timeout: 5s
+      retries: 10
