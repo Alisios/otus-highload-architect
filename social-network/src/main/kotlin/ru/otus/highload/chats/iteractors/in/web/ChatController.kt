@@ -104,6 +104,6 @@ class ChatController(private val chatAdapter: ChatAdapter) {
             ]
     )
     @GetMapping("/{chatId}")
-    fun getChatByChatId(@PathVariable("chatId") chatId: String): MutableList<MessageDto> =
+    fun getChatByChatId(@PathVariable("chatId") chatId: String): List<MessageDto> =
             chatAdapter.getChatByChatId(SecurityContextHolder.getContext().authentication.name, chatId)
 }

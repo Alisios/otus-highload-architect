@@ -1,19 +1,19 @@
 package ru.otus.highload.chats.core
 
 import mu.KLogging
-import org.springframework.http.HttpEntity
-import org.springframework.http.HttpHeaders
-import org.springframework.http.HttpMethod
+import org.springframework.core.ParameterizedTypeReference
 import org.springframework.http.MediaType
+import org.springframework.security.core.context.SecurityContext
+import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.stereotype.Service
-import org.springframework.web.client.RestTemplate
-import org.springframework.web.util.UriComponentsBuilder
-import reactor.core.publisher.Mono
+import org.springframework.web.reactive.function.BodyInserters
+import org.springframework.web.reactive.function.client.WebClient
 import ru.otus.highload.chats.core.config.ChatSettings
 import ru.otus.highload.chats.iteractors.`in`.web.model.FriendChat
 import ru.otus.highload.chats.iteractors.`in`.web.model.MessageDto
 import ru.otus.highload.chats.iteractors.`in`.web.model.UserMessageDto
 import ru.otus.highload.common.exception.ChatServiceException
+import ru.otus.highload.configuration.USER_ID_HEADER
 
 @Service
 class ChatAdapterRest(
@@ -21,49 +21,57 @@ class ChatAdapterRest(
         private val chatSettings: ChatSettings
 ) : ChatAdapter {
 
-    private companion object : KLogging() {
-        const val USER_ID_HEADER = "userId"
+    companion object : KLogging() {
+        private const val AUTHORIZATION_TOKEN = "Bearer "
+        private const val CHAT_ID = "/{chatId}"
     }
 
-    private fun createHeaders(userId: String): HttpHeaders {
-        val headers = HttpHeaders()
-        headers.set(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE)
-        headers.set(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-        headers.set(USER_ID_HEADER, userId)
-        return headers
-    }
-
-
-    override fun getChatByChatId(userId: String, chatId: String): MutableList<MessageDto> {
-        val uriComponents = UriComponentsBuilder.fromHttpUrl(chatSettings.getChatByChatId).build()
-        val entity = HttpEntity<Any>(createHeaders(userId))
-        val response = restTemplate
-                .exchange(uriComponents.toUriString(), HttpMethod.GET, entity, Limits::class.java)
-        return response.body!!
+    override fun getChatByChatId(userId: String, chatId: String): List<MessageDto> {
+        try {
+            return chatWebClient
+                    .get()
+                    .uri { it.path(CHAT_ID).build(chatId) }
+                    .accept(MediaType.APPLICATION_JSON)
+                    .header(USER_ID_HEADER, userId)
+                    .retrieve()
+                    .bodyToMono(object : ParameterizedTypeReference<MutableList<MessageDto>>() {})
+                    .log()
+                    .block()
+                    .orEmpty()
+        } catch (ex: Exception) {
+            throw ChatServiceException("Failed to receive chat by id $chatId for user $userId", ex)
+        }
     }
 
     override fun getAllChats(userId: String): List<FriendChat> {
-        val response = runCatching {
-            chatWebClient
-                    .post()
-                    .uri(chatSettings.getChatUrl)
-                    .body(Mono.just(feeRequest), FeeRequestDto::class.java)
-                    .retrieve().bodyToMono(FeeResponseDto::class.java).block()
-        }.fold(
-                onSuccess = {
-                    it
-                },
-                onFailure = { thr ->
-                    throw ChatServiceException("Failed to receive all chats for client $userId").also {
-                        logger.error {
-                            "Failed to receive all chats for client $userId. Error:  ${thr.message}; Cause:  ${thr.cause}; Stack: ${thr.stackTraceToString()}"
-                        }
-                    }
-                }
-        )
+        try {
+            return chatWebClient
+                    .get()
+                    .uri(chatSettings.userChatSuffixUrl)
+                    .accept(MediaType.APPLICATION_JSON)
+                    .header(USER_ID_HEADER, userId)
+                    .retrieve()
+                    .bodyToMono(object : ParameterizedTypeReference<MutableList<FriendChat>>() {})
+                    .log()
+                    .block()
+                    .orEmpty()
+        } catch (ex: Exception) {
+            throw ChatServiceException("Failed to receive all chats for user $userId", ex)
+        }
     }
 
     override fun sendMessage(userMessageDto: UserMessageDto, userId: String) {
-        TODO("Not yet implemented")
+        try {
+            chatWebClient
+                    .post()
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .header(USER_ID_HEADER, userId)
+                    .body(BodyInserters.fromValue(userMessageDto))
+                    .retrieve()
+                    .bodyToMono(Void::class.java)
+                    .block()
+        } catch (ex: Exception) {
+            throw ChatServiceException("Failed to send message ${userMessageDto} by user $userId", ex)
+        }
     }
 }

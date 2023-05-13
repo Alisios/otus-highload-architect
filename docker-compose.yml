@@ -1,7 +1,4 @@
 #version: '4'
-networks:
-  my-network:
-    driver: bridge
 
 volumes:
   postgres-data:
@@ -9,12 +6,14 @@ volumes:
 
 services:
   app:
+    container_name: "social_network"
     build:
-      context: .
+      context: social-network
       dockerfile: Dockerfile
     privileged: true
     ports:
-      - "18080-18095:8080"
+#      - "18080-18095:8080"
+       - "18080:8080"
     environment:
       TZ: 'Europe/Moscow'
       SPRING_DATASOURCE_URL: jdbc:postgresql://pg-master:5432/social-network?currentSchema=social_network
@@ -23,7 +22,28 @@ services:
       SPRING_REDIS_HOST: redis
       REDIS_HOST: redis
       APP_RABBIT_MQ_HOST: rabbitmq
-    restart: always
+      APP_CHAT_BASE-URL: http://chat-app:9090/v2/chats
+    restart: on-failure
+    depends_on:
+      pg-master:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  chat-app:
+    container_name: "chat-app"
+    build:
+      context: chat
+      dockerfile: Dockerfile
+    privileged: true
+    ports:
+      - "19090:9090"
+    environment:
+      TZ: 'Europe/Moscow'
+      SPRING_DATASOURCE_URL: jdbc:postgresql://pg-master:5432/social-network?currentSchema=chat
+      SPRING_DATASOURCE_USERNAME: alisa
+      SPRING_DATASOURCE_PASSWORD: password1
+    restart: on-failure
     depends_on:
       pg-master:
         condition: service_healthy

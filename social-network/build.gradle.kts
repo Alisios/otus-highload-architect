@@ -19,7 +19,7 @@ tasks.withType<KotlinCompile> {
 }
 
 group = "ru.otus.highload"
-version = "3.0.0"
+version = "4.0.0"
 
 allprojects {
 
@@ -37,6 +37,10 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.flywaydb:flyway-core")
     implementation("org.springframework.boot:spring-boot-starter-data-redis")
+    implementation("org.springframework.boot:spring-boot-starter-websocket")
+    implementation("org.springframework.integration:spring-integration-stomp")
+    implementation("org.springframework.session:spring-session-core")
+    implementation("org.springframework.session:spring-session-data-redis")
     implementation("org.springframework.boot:spring-boot-starter-webflux")
 
     //Logging
@@ -46,6 +50,8 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.postgresql:postgresql")
     implementation("org.springframework.boot:spring-boot-starter-security")
+    implementation("org.springframework.security:spring-security-messaging")
+    implementation("org.springframework.boot:spring-boot-starter-reactor-netty")
     implementation("org.springframework.boot:spring-boot-starter-validation")
     implementation("io.springfox:springfox-swagger-ui:2.9.2")
     implementation("org.springdoc:springdoc-openapi-ui:1.6.8")

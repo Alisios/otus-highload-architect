@@ -19,7 +19,7 @@ tasks.withType<KotlinCompile> {
 }
 
 group = "ru.otus.highload"
-version = "3.0.0"
+version = "4.0.0"
 
 allprojects {
     repositories {
@@ -41,7 +41,7 @@ dependencies {
 
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.postgresql:postgresql")
-//    implementation("org.springframework.boot:spring-boot-starter-security")
+    //implementation("org.springframework.boot:spring-boot-starter-security")
     implementation("org.springframework.boot:spring-boot-starter-validation")
     implementation("io.springfox:springfox-swagger-ui:2.9.2")
     implementation("org.springdoc:springdoc-openapi-ui:1.6.8")

@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.ResponseStatus
 import ru.otus.highload.common.exception.AuthenticationException
+import ru.otus.highload.common.exception.ChatServiceException
 import ru.otus.highload.common.exception.CommentNotFoundException
 import ru.otus.highload.common.exception.ExistedUserException
 import ru.otus.highload.common.exception.NotFoundUserException
@@ -27,42 +28,52 @@ class ExceptionHandleController {
 
     @ExceptionHandler(Exception::class)
     fun defaultHandler(e: Exception): ResponseEntity<DefaultErrorResponse> =
-        ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-            .contentType(MediaType.APPLICATION_JSON)
-            .body(DefaultErrorResponse(DEFAULT_ERROR_MESSAGE_RU))
-            .also { logger.error(e) { "Server error: ${e.message}" } }
+            ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .body(DefaultErrorResponse(DEFAULT_ERROR_MESSAGE_RU))
+                    .also { logger.error(e) { "Server error: ${e.message}" } }
 
     @ExceptionHandler(NotFoundUserException::class, CommentNotFoundException::class)
     fun notFoundExceptionHandler(e: Exception): ResponseEntity<DefaultErrorResponse> =
-        ResponseEntity.status(HttpStatus.NOT_FOUND)
-            .contentType(MediaType.APPLICATION_JSON)
-            .body(DefaultErrorResponse(NOT_FOUND_ERROR_MESSAGE_RU))
-            .also { logger.error(e) { "Not found error: ${e.message}" } }
+            ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .body(DefaultErrorResponse(NOT_FOUND_ERROR_MESSAGE_RU))
+                    .also { logger.error(e) { "Not found error: ${e.message}" } }
 
     @ExceptionHandler(AuthenticationException::class)
     fun authenticationExceptionsHandler(
-        e: Exception
+            e: Exception
     ): ResponseEntity<DefaultErrorResponse> =
-        ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-            .contentType(MediaType.APPLICATION_JSON)
-            .body(e.message?.let { DefaultErrorResponse(it) })
-            .also { logger.error(e) { "Authentication error: ${e.message}" } }
+            ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .body(e.message?.let { DefaultErrorResponse(it) })
+                    .also { logger.error(e) { "Authentication error: ${e.message}" } }
 
     @ExceptionHandler(ExistedUserException::class, HttpMessageNotReadableException::class)
     fun existedUserExceptionsHandler(e: Exception): ResponseEntity<DefaultErrorResponse> =
-        ResponseEntity.status(HttpStatus.BAD_REQUEST)
-            .contentType(MediaType.APPLICATION_JSON)
-            .body(e.message?.let { DefaultErrorResponse(it) })
-            .also { logger.error(e) { "Bad request: ${e.message}" } }
+            ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .body(e.message?.let { DefaultErrorResponse(it) })
+                    .also { logger.error(e) { "Bad request: ${e.message}" } }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(ValidationException::class)
     fun handleValidationExceptions(
-        e: ValidationException
+            e: ValidationException
     ): ResponseEntity<DefaultErrorResponse> =
-        ResponseEntity.status(HttpStatus.BAD_REQUEST)
-            .contentType(MediaType.APPLICATION_JSON)
-            .body(e.message?.let { DefaultErrorResponse(it) })
-            .also { logger.error(e) { "Bad request: ${e.message}" } }
+            ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .body(e.message?.let { DefaultErrorResponse(it) })
+                    .also { logger.error(e) { "Bad request: ${e.message}" } }
+
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ExceptionHandler(ChatServiceException::class)
+    fun handleChatServiceException(
+            e: RuntimeException
+    ): ResponseEntity<DefaultErrorResponse> =
+            ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .body(e.message?.let { DefaultErrorResponse(it) })
+                    .also { logger.error(e) { "Error to get info from chat-service: ${e.message}" } }
 
 }

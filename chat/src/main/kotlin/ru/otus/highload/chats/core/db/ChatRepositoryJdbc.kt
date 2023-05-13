@@ -25,7 +25,7 @@ class ChatRepositoryJdbc(
     override fun saveMessage(message: MessageDtoEntity) {
         val now = LocalDateTime.now()
         namedParameterJdbcTemplate.jdbcTemplate.update(
-            "insert into social_network.messages (message_id, chat_id, from_user_id, to_user_id, message_text, create_date) values(?, ?, ?, ?, ?, ?)" +
+            "insert into chat.messages (message_id, chat_id, from_user_id, to_user_id, message_text, create_date) values(?, ?, ?, ?, ?, ?)" +
                     "on conflict (message_id, chat_id) do nothing ",
             message.messageId,
             message.chatId,
@@ -39,7 +39,7 @@ class ChatRepositoryJdbc(
     override fun saveChat(friendChatEntity: FriendChatEntity) {
         val now = LocalDateTime.now()
         namedParameterJdbcTemplate.jdbcTemplate.update(
-            "insert into social_network.chats (chat_id, from_user_id, to_user_id, create_date) values(?, ?, ?, ?)" +
+            "insert into chat.chats (chat_id, from_user_id, to_user_id, create_date) values(?, ?, ?, ?)" +
                     "on conflict (chat_id) do nothing ",
             friendChatEntity.chatId,
             friendChatEntity.fromUserId,
@@ -50,14 +50,14 @@ class ChatRepositoryJdbc(
 
     override fun ifChatExist(chatId: String): Boolean =
         namedParameterJdbcOperations.query(
-            "select * from social_network.chats where chat_id = :chat_id",
+            "select * from chat.chats where chat_id = :chat_id",
             mapOf(CHAT_ID to chatId),
             chatRowMapper
         ).size > 0
 
     override fun getChatByChatId(chatId: String): FriendChatEntity? {
         val chat = namedParameterJdbcOperations.query(
-            "select * from social_network.chats where chat_id = :chat_id",
+            "select * from chat.chats where chat_id = :chat_id",
             mapOf(CHAT_ID to chatId),
             chatRowMapper
         )
@@ -66,14 +66,14 @@ class ChatRepositoryJdbc(
 
     override fun getMessagesByChatId(chatId: String): MutableList<MessageDtoEntity> =
         namedParameterJdbcOperations.query(
-            "select * from social_network.messages where chat_id = :chat_id order by create_date DESC LIMIT 30;",
+            "select * from chat.messages where chat_id = :chat_id order by create_date DESC LIMIT 30;",
             mapOf(CHAT_ID to chatId),
             messageRowMapper
         )
 
     override fun getAllChatsByUserId(userId: String): MutableList<FriendChatEntity> {
         return namedParameterJdbcOperations.query(
-            "select * from social_network.chats where from_user_id = :from_user_id order by create_date DESC LIMIT 30;",
+            "select * from chat.chats where from_user_id = :from_user_id order by create_date DESC LIMIT 30;",
             mapOf(FROM_USER_ID to userId),
             chatRowMapper
         )

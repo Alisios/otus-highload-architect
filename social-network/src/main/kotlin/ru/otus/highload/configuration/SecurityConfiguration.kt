@@ -13,6 +13,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.web.SecurityFilterChain
 
+const val USER_ID_HEADER = "userId"
 
 @EnableWebSecurity
 @Configuration
@@ -46,7 +47,7 @@ class SecurityConfiguration(
             .and()
             .authorizeRequests()
             .antMatchers("/users/register", "/utility").permitAll()
-            .antMatchers("/users/**", "/posts/**", "/friends/**").fullyAuthenticated()
+            .antMatchers("/users/**", "/posts/**", "/friends/**", "/v1/**").fullyAuthenticated()
             .and()
             .formLogin()
             .and()

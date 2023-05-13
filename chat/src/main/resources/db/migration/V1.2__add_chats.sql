@@ -1,4 +1,4 @@
-INSERT INTO social_network.chats(chat_id, from_user_id, to_user_id, create_date)
+INSERT INTO chat.chats(chat_id, from_user_id, to_user_id, create_date)
 VALUES ('bcf9d8bf-a18b-42ff-818e-a73cae48d3fa', 'da380907-ea42-4985-8fc4-92d99eab39a8', '4cbdd519-de51-4f35-af3a-b4ebdf34006e', '2023-03-29 10:11:30.757176'),
        ('ccf9d8bf-a18b-42ff-818e-a73cae48d3fa', 'da380907-ea42-4985-8fc4-92d99eab39a8', 'fdce945a-641b-4270-911e-45b720b4612e', '2023-03-25 10:11:30.757176'),
        ('357bd3c1-02aa-42eb-819a-fde2e9eae02b', '4cbdd519-de51-4f35-af3a-b4ebdf34006e', 'fdce945a-641b-4270-911e-45b720b4612e', '2023-03-11 10:11:30.757176'),
@@ -20,7 +20,7 @@ VALUES ('bcf9d8bf-a18b-42ff-818e-a73cae48d3fa', 'da380907-ea42-4985-8fc4-92d99ea
        ('5fdacc52-ba7b-49ef-a5f2-0989d50f0f2a','6752332e-6b3a-4053-88a5-8bedbef23a5f', '6752332e-6b3a-4053-88a5-8bedbef23a5f', '2023-03-01 10:11:30.757176'),
        ('35d087aa-1c36-496f-a934-b83b9424fe91', 'da380907-ea42-4985-8fc4-92d99eab39a8', '6752332e-6b3a-4053-88a5-8bedbef23a5f', '2023-03-01 10:11:30.757176');
 
-INSERT INTO social_network.chats (chat_id, from_user_id, to_user_id, create_date)
+INSERT INTO chat.chats (chat_id, from_user_id, to_user_id, create_date)
 VALUES ('acf9d8bf-a18b-42ff-818e-a73cae48d3f1', 'd5907ac0-ca30-4c8e-a436-e02951ab8dfe', 'da380907-ea42-4985-8fc4-92d99eab39a8', '2023-03-12 10:11:30.757176'),
        ('457bd3c1-02aa-42eb-819a-fde2e9eae021', 'd5907ac0-ca30-4c8e-a436-e02951ab8dfe', 'fdce945a-641b-4270-911e-45b720b4612e', '2023-03-11 10:11:30.757176'),
        ('7e6861ae-c841-40bd-a04a-9dfe17de95a1', 'd5907ac0-ca30-4c8e-a436-e02951ab8dfe', '10ead087-d5f4-4477-bff8-c6bc48ec4aa8', '2023-03-15 10:11:30.757176'),
@@ -37,7 +37,7 @@ VALUES ('acf9d8bf-a18b-42ff-818e-a73cae48d3f1', 'd5907ac0-ca30-4c8e-a436-e02951a
        ('f43a14ca-9eb0-4a5f-b345-c9e157e033a1', '6f30fea0-8c52-4ff0-b5b3-717bda2c784b', '6752332e-6b3a-4053-88a5-8bedbef23a5f', '2023-03-01 10:11:30.757176'),
        ('f43a14c6-9eb0-4a5f-b345-c9e157e033a1', 'd5907ac0-ca30-4c8e-a436-e02951ab8dfe', '6752332e-6b3a-4053-88a5-8bedbef23a5f', '2023-03-01 10:11:30.757176');
 
-INSERT INTO social_network.chats (chat_id, from_user_id, to_user_id, create_date)
+INSERT INTO chat.chats (chat_id, from_user_id, to_user_id, create_date)
 VALUES ('acf9d8bf-a18b-42ff-818e-a73cae48d3b1', 'cee10812-c338-4169-b102-948a7b4b042a', 'da380907-ea42-4985-8fc4-92d99eab39a8', '2023-03-12 10:11:30.757176'),
        ('457bd3c1-02aa-42eb-819a-fde2e9eae0b1', 'cee10812-c338-4169-b102-948a7b4b042a', 'fdce945a-641b-4270-911e-45b720b4612e', '2023-03-11 10:11:30.757176'),
        ('7e6861ae-c841-40bd-a04a-9dfe17de95b1', 'cee10812-c338-4169-b102-948a7b4b042a', '10ead087-d5f4-4477-bff8-c6bc48ec4aa8', '2023-03-15 10:11:30.757176'),
@@ -54,7 +54,7 @@ VALUES ('acf9d8bf-a18b-42ff-818e-a73cae48d3b1', 'cee10812-c338-4169-b102-948a7b4
        ('f43a14cd-9eb0-4a5f-b345-c9e157e033b1', 'cee10812-c338-4169-b102-948a7b4b042a', '6752332e-6b3a-4053-88a5-8bedbef23a5f', '2023-03-01 10:11:30.757176'),
        ('f33a14cd-9eb0-4a5f-b345-c9e157e033b1', 'cee10812-c338-4169-b102-948a7b4b042a', '6752332e-6b3a-4053-88a5-8bedbef23a5f', '2023-03-01 10:11:30.757176');
 
-INSERT INTO social_network.chats (chat_id, from_user_id, to_user_id, create_date)
+INSERT INTO chat.chats (chat_id, from_user_id, to_user_id, create_date)
 VALUES ('a752332e-6b3a-4053-88a5-8bedbef23a5f', '17cc203f-0919-4825-a450-56a5d1e7003b', 'da380907-ea42-4985-8fc4-92d99eab39a8', '2023-03-12 10:11:30.757176'),
        ('a722332e-6b3a-4053-88a5-8bedbef23a5f', '17cc203f-0919-4825-a450-56a5d1e7003b', 'fdce945a-641b-4270-911e-45b720b4612e', '2023-03-11 10:11:30.757176'),
        ('a732332e-6b3a-4053-88a5-8bedbef23a5f', '17cc203f-0919-4825-a450-56a5d1e7003b', '10ead087-d5f4-4477-bff8-c6bc48ec4aa8', '2023-03-15 10:11:30.757176'),
