@@ -3,8 +3,6 @@ package ru.otus.highload.chats.core
 import mu.KLogging
 import org.springframework.core.ParameterizedTypeReference
 import org.springframework.http.MediaType
-import org.springframework.security.core.context.SecurityContext
-import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.stereotype.Service
 import org.springframework.web.reactive.function.BodyInserters
 import org.springframework.web.reactive.function.client.WebClient
@@ -22,7 +20,6 @@ class ChatAdapterRest(
 ) : ChatAdapter {
 
     companion object : KLogging() {
-        private const val AUTHORIZATION_TOKEN = "Bearer "
         private const val CHAT_ID = "/{chatId}"
     }
 
@@ -38,6 +35,7 @@ class ChatAdapterRest(
                     .log()
                     .block()
                     .orEmpty()
+                    .also { logger.info { "User $userId got chat by id $chatId (v1)" } }
         } catch (ex: Exception) {
             throw ChatServiceException("Failed to receive chat by id $chatId for user $userId", ex)
         }
@@ -55,6 +53,7 @@ class ChatAdapterRest(
                     .log()
                     .block()
                     .orEmpty()
+                    .also { logger.info { "User $userId got all chats (v1)" } }
         } catch (ex: Exception) {
             throw ChatServiceException("Failed to receive all chats for user $userId", ex)
         }
@@ -69,7 +68,7 @@ class ChatAdapterRest(
                     .body(BodyInserters.fromValue(userMessageDto))
                     .retrieve()
                     .bodyToMono(Void::class.java)
-                    .block()
+                    .block().also { logger.info { "User $userId sent message $userMessageDto (v1)" } }
         } catch (ex: Exception) {
             throw ChatServiceException("Failed to send message ${userMessageDto} by user $userId", ex)
         }
