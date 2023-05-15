@@ -1,4 +1,4 @@
-package ru.otus.highload.posts.config
+package ru.otus.highload.posts.config.cache
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.springframework.beans.factory.annotation.Value
@@ -11,7 +11,10 @@ import org.springframework.data.redis.core.convert.MappingConfiguration
 import org.springframework.data.redis.core.index.IndexConfiguration
 import org.springframework.data.redis.core.mapping.RedisMappingContext
 import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer
-import ru.otus.highload.posts.core.cache.PostFeedEntity
+import org.springframework.session.Session
+import org.springframework.session.SessionRepository
+import org.springframework.session.data.redis.RedisIndexedSessionRepository
+import ru.otus.highload.posts.core.cache.post.PostFeedEntity
 
 @Configuration
 class PostFeedRedisConfig(
