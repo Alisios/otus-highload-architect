@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.media.Schema
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
 import io.swagger.v3.oas.annotations.tags.Tag
+import mu.KLogging
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.*
 import ru.otus.highload.chats.core.ChatService
@@ -19,6 +20,8 @@ import ru.otus.highload.common.DefaultErrorResponse
 @RequestMapping("/v2/chats")
 @CrossOrigin
 class ChatController(private val chatService: ChatService) {
+
+    private companion object : KLogging()
 
     @Operation(summary = "Отправка нового сообщения")
     @ApiResponses(
@@ -45,7 +48,7 @@ class ChatController(private val chatService: ChatService) {
     @PostMapping
     fun sendMessage(
             @RequestBody userMessageDto: UserMessageDto, @RequestHeader("userId") userId: String
-    ) = chatService.sendMessage(userMessageDto, userId)
+    ) = chatService.sendMessage(userMessageDto, userId).also { logger.info { "User $userId sent message $userMessageDto (v2)" } }
 
     @Operation(summary = "Получение всех чатов пользователя")
     @ApiResponses(
@@ -71,7 +74,7 @@ class ChatController(private val chatService: ChatService) {
     )
     @GetMapping("/user")
     fun getByUserId(@RequestHeader("userId") userId: String): List<FriendChat> =
-            chatService.getAllChats(userId)
+            chatService.getAllChats(userId).also { logger.info { "User $userId got all chats (v2)" } }
 
     @Operation(summary = "Получение всех чатов пользователя")
     @ApiResponses(
@@ -98,4 +101,5 @@ class ChatController(private val chatService: ChatService) {
     @GetMapping("/{chatId}")
     fun getChatByChatId(@PathVariable("chatId") chatId: String, @RequestHeader("userId") userId: String): MutableList<MessageDto> =
             chatService.getChatByChatId(userId, chatId)
+                    .also { logger.info { "User $userId got chat by id $chatId (v2)" } }
 }
