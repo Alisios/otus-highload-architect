@@ -12,7 +12,7 @@ services:
   app:
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: social-network/Dockerfile
     privileged: true
     ports:
       - 18080:8080

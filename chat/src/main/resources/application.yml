@@ -1,0 +1,24 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/postgres?currentSchema=chat
+    username: postgres
+    password:
+    hikari:
+      schema: chat
+      maximum-pool-size: 50
+      minimum-idle: 10
+
+  sql:
+    init:
+      schema-locations: classpath:/db/schema.sql
+      mode: never
+
+  flyway:
+    baselineOnMigrate: true
+    validateOnMigrate: false
+
+  main:
+    allow-bean-definition-overriding: true
+
+server:
+  port: 9090
